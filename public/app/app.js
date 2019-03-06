@@ -1,7 +1,14 @@
 (function() {
     'use strict';
 
-    angular.module('userApp', ['appRoutes'])
+    angular.module('userApp', [
+        'appRoutes',
+        'userControllers',
+        'userServices',
+        'ngAnimate',
+        'mainController',
+        'authServices'
+    ])
 
 
 })();

@@ -37,9 +37,11 @@ UserSchema.pre('save', function(next) {
     next();
 })
 
-bcrypt.hash("bacon", null, null, function(err, hash) {
-    // Store hash in your password DB.
-});
+UserSchema.methods.comparePassword = function(_password) {
+
+    return bcrypt.compareSync(_password, this.password);
+}
+
 
 
 module.exports = mongoose.model('User', UserSchema)

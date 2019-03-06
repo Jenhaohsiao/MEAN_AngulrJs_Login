@@ -15,6 +15,19 @@
             templateUrl: 'app/views/pages/about.html'
         })
 
+        .when('/register', {
+            templateUrl: 'app/views/pages/users/register.html',
+            controller: "registerController",
+            controllerAs: 'register'
+
+        })
+
+        .when('/login', {
+            templateUrl: 'app/views/pages/users/login.html',
+
+        })
+
+
         .otherwise({
             redirectTo: '/'
         });
