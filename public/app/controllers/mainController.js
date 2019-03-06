@@ -27,15 +27,15 @@
         $rootScope) {
 
         var vm = this;
-
         vm.loadme = false;
+
         $rootScope.$on('$routeChangeStart', function() {
 
             if (Auth.isLoggedIn()) {
                 // console.log("Success: User is logged In.");
                 vm.isLoggedIn = true;
                 Auth.getUser().then(function(response) {
-                    console.log("getUser:", response.data.username);
+                    // console.log("getUser:", response.data.username);
                     vm.username = response.data.username
                     vm.useremail = response.data.email
                     vm.loadme = true;
@@ -46,10 +46,8 @@
                 vm.isLoggedIn = false;
                 vm.username = null;
                 vm.loadme = true;
-
             }
-
-        })
+        });
 
 
         this.dologin = function(loginData) {
