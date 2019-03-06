@@ -19,12 +19,15 @@
     function registerController($scope, $http, $location, $timeout, User) {
 
         var vm = this;
+        vm.loading = false;
+
+
+
         this.regUser = function(_regData) {
 
             vm.loading = true;
             vm.successMsg = null;
             vm.errorMsg = null;
-
             User.create(_regData)
                 .then(function(respose) {
                     console.log("After save, data:", respose);

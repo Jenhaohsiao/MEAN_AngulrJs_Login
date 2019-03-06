@@ -18,9 +18,17 @@
     function MainController(Auth, $timeout, $location) {
 
         var vm = this;
+
+        if (Auth.isLoggedIn()) {
+            console.log("Success: User is logged In.");
+        } else {
+            console.log("Filure: User in NOT logged In");
+        }
         this.dologin = function(loginData) {
+
             vm.loading = true;
-            vm.successMsg = false;
+            vm.successMsg = null;
+            vm.errorMsg = null;
 
             Auth.login(vm.loginData)
                 .then(function(respose) {
@@ -29,8 +37,13 @@
                         // create success message
                         vm.successMsg = respose.data.message;
                         vm.loading = false;
+                        vm.errorMsg = false;
+
+                        vm.loginData = null;
+                        vm.loading = false;
 
                         $timeout(function() {
+
                             $location.path('/home');
                         }, 2000)
 

@@ -1,5 +1,6 @@
 var User = require('../models/user');
-
+var jwt = require('jsonwebtoken');
+var toekenSecret = "harrypotter";
 
 module.exports = function(router) {
 
@@ -45,7 +46,7 @@ module.exports = function(router) {
 
 
     // USER Login Route
-
+    // http://locathost:port/api/authentlcate
     router.post('/authenticate', function(req, res) {
 
         if (!req.body.username) {
@@ -53,6 +54,7 @@ module.exports = function(router) {
                 success: false,
                 message: 'Neend user name'
             });
+            return
         }
 
         User.findOne({
@@ -67,6 +69,8 @@ module.exports = function(router) {
                     message: 'Could Not authenticate this user'
                 });
 
+                return
+
             } else if (user) {
 
                 var validPassword = null
@@ -78,6 +82,8 @@ module.exports = function(router) {
                         success: false,
                         message: 'No password provided'
                     });
+
+                    return
                 }
 
 
@@ -87,11 +93,24 @@ module.exports = function(router) {
                         message: 'Could Not authenticate password'
                     });
 
+                    return
+
                 } else {
+
+                    var token = jwt.sign({
+                            usernmae: user.username,
+                            email: user.email
+                        },
+                        toekenSecret, {
+                            expiresIn: '2h'
+                        });
                     res.json({
                         success: true,
-                        message: 'User authenticated!'
+                        message: 'User authenticated!',
+                        token: token
                     });
+
+                    return
 
                 }
 
@@ -99,8 +118,5 @@ module.exports = function(router) {
         });
     });
 
-
     return router;
-
-
 }
