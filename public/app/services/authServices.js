@@ -12,9 +12,9 @@
          .module('authServices')
          .factory('Auth', authFactory);
 
-     authFactory.$inject = ['$http', 'AuthToken'];
+     authFactory.$inject = ['$http', 'AuthToken', '$q'];
 
-     function authFactory($http, AuthToken) {
+     function authFactory($http, AuthToken, $q) {
 
          var authFactory = {}
 

@@ -32,6 +32,11 @@
 
         })
 
+        .when('/profile', {
+            templateUrl: 'app/views/pages/users/profile.html',
+
+        })
+
 
         .otherwise({
             redirectTo: '/'

@@ -10,10 +10,10 @@ module.exports = function(router) {
 
         // http://localhost:8080/api/uers
         var user = new User();
+
         user.username = require.body.username;
         user.password = require.body.password;
         user.email = require.body.email;
-
 
         if (require.body.username == null || require.body.username == '' || require.body.password == null || require.body.password == '' || require.body.email == null || require.body.email == '') {
             response.json({
@@ -98,7 +98,7 @@ module.exports = function(router) {
                 } else {
 
                     var token = jwt.sign({
-                            usernmae: user.username,
+                            username: user.username,
                             email: user.email
                         },
                         tokenSecret, {

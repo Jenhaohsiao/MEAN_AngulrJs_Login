@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    angular.module('mainController', ['authServices'
-
+    angular.module('mainController', [
+        'authServices'
     ]);
 })();
 
@@ -13,20 +13,45 @@
         .module('mainController')
         .controller('MainController', MainController);
 
-    MainController.$inject = ['Auth', '$timeout', '$location'];
+    MainController.$inject = [
+        'Auth',
+        '$timeout',
+        '$location',
+        '$rootScope'
+    ];
 
-    function MainController(Auth, $timeout, $location) {
+    function MainController(
+        Auth,
+        $timeout,
+        $location,
+        $rootScope) {
 
         var vm = this;
 
-        if (Auth.isLoggedIn()) {
-            console.log("Success: User is logged In.");
-            Auth.getUser().then(function(data) {
-                console.log("getUser,data:", data);
-            });
-        } else {
-            console.log("Filure: User in NOT logged In");
-        }
+        vm.loadme = false;
+        $rootScope.$on('$routeChangeStart', function() {
+
+            if (Auth.isLoggedIn()) {
+                // console.log("Success: User is logged In.");
+                vm.isLoggedIn = true;
+                Auth.getUser().then(function(response) {
+                    console.log("getUser:", response.data.username);
+                    vm.username = response.data.username
+                    vm.useremail = response.data.email
+                    vm.loadme = true;
+
+                });
+            } else {
+                // console.log("Filure: User in NOT logged In");
+                vm.isLoggedIn = false;
+                vm.username = null;
+                vm.loadme = true;
+
+            }
+
+        })
+
+
         this.dologin = function(loginData) {
 
             vm.loading = true;
@@ -34,60 +59,42 @@
             vm.errorMsg = null;
 
             Auth.login(vm.loginData)
-                .then(function(respose) {
+                .then(function(response) {
 
-                    if (respose.data.success) {
+                    if (response.data.success) {
                         // create success message
-                        vm.successMsg = respose.data.message;
+                        vm.successMsg = response.data.message + '...redirecting';
                         vm.loading = false;
                         vm.errorMsg = false;
 
-                        vm.loginData = null;
                         vm.loading = false;
 
                         $timeout(function() {
 
-                            $location.path('/home');
+                            $location.path('/about');
+                            vm.loginData.username = null;
+                            vm.loginData.password = null;
+                            vm.successMsg = false;
                         }, 2000)
 
 
                         // redirect to home page
                     } else {
                         // create an error message
-                        vm.errorMsg = respose.data.message;
+                        vm.errorMsg = response.data.message;
                         vm.loading = false;
                     }
                 })
         };
 
         this.logout = function() {
+
             Auth.logout();
+
             $location.path('/logout');
             $timeout(function() {
                 $location.path('/');
-            }, 2000);
+            }, 1000);
         }
     }
 })();
-// User.create(_regData)
-//                 .then(function(respose) {
-//                     console.log("After save, data:", respose);
-
-//                     if (respose.data.success) {
-//                         // create success message
-//                         vm.successMsg = respose.data.message;
-//                         vm.loading = false;
-
-//                         $timeout(function() {
-//                             $location.path('/home');
-//                         }, 2000)
-
-
-//                         // redirect to home page
-//                     } else {
-//                         // create an error message
-//                         vm.errorMsg = respose.data.message;
-//                         vm.loading = false;
-//                     }
-//                 })
-//         };
