@@ -108,6 +108,8 @@
              if (token) {
                  config.headers['x-access-token'] = token;
                  return config;
+             } else {
+                 return config;
              }
          }
 

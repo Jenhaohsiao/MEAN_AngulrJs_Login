@@ -10,11 +10,11 @@
         'authServices'
     ])
 
-    // .config(function($httpProvider) {
+    .config(function($httpProvider) {
 
-    //     $httpProvider.interceptors.push('AuthInterceptors')
+        $httpProvider.interceptors.push('AuthInterceptors')
 
-    // })
+    })
 
 
 })();
