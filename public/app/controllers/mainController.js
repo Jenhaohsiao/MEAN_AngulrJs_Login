@@ -21,6 +21,9 @@
 
         if (Auth.isLoggedIn()) {
             console.log("Success: User is logged In.");
+            Auth.getUser().then(function(data) {
+                console.log("getUser,data:", data);
+            });
         } else {
             console.log("Filure: User in NOT logged In");
         }
@@ -56,6 +59,14 @@
                     }
                 })
         };
+
+        this.logout = function() {
+            Auth.logout();
+            $location.path('/logout');
+            $timeout(function() {
+                $location.path('/');
+            }, 2000);
+        }
     }
 })();
 // User.create(_regData)

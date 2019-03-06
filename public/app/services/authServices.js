@@ -37,6 +37,17 @@
              }
          }
 
+         //  Auth.getUser()
+         authFactory.getUser = function() {
+             if (AuthToken.getToken()) {
+                 return $http.post('/api/me');
+             } else {
+                 $q.reject({
+                     message: 'User has no token'
+                 });
+             }
+         }
+
          //  Auth.logout()
          authFactory.logout = function() {
              AuthToken.setToken();
@@ -76,5 +87,30 @@
 
          return authTokenFactory;
 
+     }
+ })();
+
+ (function() {
+     'use strict';
+
+     angular
+         .module('authServices')
+         .factory('AuthInterceptors', AuthInterceptorsService);
+
+     AuthInterceptorsService.$inject = ['AuthToken'];
+
+     function AuthInterceptorsService(AuthToken) {
+         var AuthInterceptorsFactory = {};
+
+         AuthInterceptorsFactory.request = function(config) {
+
+             var token = AuthToken.getToken();
+             if (token) {
+                 config.headers['x-access-token'] = token;
+                 return config;
+             }
+         }
+
+         return AuthInterceptorsFactory;
      }
  })();

@@ -14,7 +14,6 @@
     UserFactory.$inject = ['$http'];
 
     function UserFactory($http) {
-        console.log("UserService")
 
         var userFactory = {}
 

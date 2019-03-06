@@ -27,6 +27,11 @@
 
         })
 
+        .when('/logout', {
+            templateUrl: 'app/views/pages/users/logout.html',
+
+        })
+
 
         .otherwise({
             redirectTo: '/'

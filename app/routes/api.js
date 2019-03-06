@@ -1,6 +1,6 @@
 var User = require('../models/user');
 var jwt = require('jsonwebtoken');
-var toekenSecret = "harrypotter";
+var tokenSecret = "harrypotter";
 
 module.exports = function(router) {
 
@@ -101,7 +101,7 @@ module.exports = function(router) {
                             usernmae: user.username,
                             email: user.email
                         },
-                        toekenSecret, {
+                        tokenSecret, {
                             expiresIn: '2h'
                         });
                     res.json({
@@ -118,5 +118,43 @@ module.exports = function(router) {
         });
     });
 
+    // middleware
+
+    router.use(function(req, res, next) {
+        var token = req.body.token || req.body.query || req.headers['x-access-token'];
+
+        if (token) {
+
+            jwt.verify(token, tokenSecret, function(err, decoded) {
+                if (err) {
+                    res.json({
+                        success: false,
+                        message: 'Token invalid'
+                    });
+                } else {
+                    req.decoded = decoded;
+                    next();
+                }
+            })
+
+        } else {
+            res.json({
+                success: false,
+                message: 'No token provided',
+            });
+        }
+    });
+
+    // middleware end
+
+    router.post('/me', function(req, res) {
+
+        res.send(req.decoded);
+
+    })
+
     return router;
 }
+
+// var decoded = jwt.verify(token, 'shhhhh');
+// console.log(decoded.foo)
