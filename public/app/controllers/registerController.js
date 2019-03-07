@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    angular.module('userControllers', ['userServices'
-
+    angular.module('userControllers', [
+        'userServices'
     ]);
 })();
 
@@ -14,9 +14,18 @@
         .module('userControllers')
         .controller('registerController', registerController);
 
-    registerController.$inject = ['$scope', '$http', '$location', '$timeout', 'User'];
+    registerController.$inject = [
+        '$http',
+        '$location',
+        '$timeout',
+        'User'
+    ];
 
-    function registerController($scope, $http, $location, $timeout, User) {
+    function registerController(
+        $http,
+        $location,
+        $timeout,
+        User) {
 
         var vm = this;
         vm.loading = false;

@@ -2,7 +2,8 @@
     'use strict';
 
     angular.module('mainController', [
-        'authServices'
+        'authServices',
+        'userServices',
     ]);
 })();
 
@@ -18,7 +19,11 @@
         '$timeout',
         '$location',
         '$rootScope',
-        '$interval'
+        '$interval',
+        '$window',
+        '$route',
+        'User',
+        'AuthToken',
     ];
 
     function MainController(
@@ -26,7 +31,12 @@
         $timeout,
         $location,
         $rootScope,
-        $interval) {
+        $interval,
+        $window,
+        $route,
+        User,
+        AuthToken,
+    ) {
 
         var vm = this;
         vm.loadme = false;
@@ -37,14 +47,113 @@
 
                 vm.isCheckingSession = true;
                 var interval = $interval(function() {
-                    console.log("After logged in, run $interval")
+                    // console.log("loggin, run $interval")
+
+                    var token = $window.localStorage.getItem('token');
+
+                    if (token === null) {
+                        $interval.cancel(interval)
+                    } else {
+                        // Angulr taking a JSON web token and converting the token time
+                        // to timestamp time. So that we can compare it to local time or current time.
+                        function parseJwt(token) {
+                            var base64Url = token.split('.')[1];
+                            var base64 = base64Url.replace('-', '+').replace('_', '/');
+                            return JSON.parse($window.atob(base64));
+                        }
+
+                        var expireTime = parseJwt(token);
+                        // Convert the date object in JavaScript to time stamp
+                        var timeStamp = Math.floor(Date.now() / 1000);
+                        // console.log("expireTime:", expireTime.exp)
+                        // console.log("timeStamp:", timeStamp)
+                        var timeCheck = expireTime.exp - timeStamp
+                        console.log("timeCheck:", timeCheck)
+
+                        if (timeCheck <= 25) {
+                            showModal(1);
+                            $interval.cancel(interval)
+
+                        } else {
+                            console.log('Token not yet expired')
+
+                        }
+                    }
 
                 }, 2000)
             }
+        };
+
+        vm.checkSession();
+
+        function showModal(_option) {
+            vm.choiceMade = false;
+            vm.modalHeader = '';
+            vm.modalBody = '';
+            vm.hideButton = false;
+
+
+            if (_option === 1) {
+
+                vm.modalHeader = "Timeout Warning";
+                vm.modalBody = " Your session will expired in X seconds. Would you like to renew your session?";
+
+                $("#myModal").modal({
+                    backdrop: "static"
+                });
+            } else if (_option === 2) {
+                vm.hideButton = true;
+                vm.modalHeader = 'Logging Out';
+                $("#myModal").modal({
+                    backdrop: "static"
+                });
+
+                $timeout(function() {
+
+                    Auth.logout();
+                    $location.path('/');
+                    hideModal();
+                    $route.reload();
+
+                }, 2000);
+            }
+
+            $timeout(function() {
+                if (!vm.choiceMade) {
+                    hideModal();
+                }
+            }, 5000)
+        }
+
+        vm.renewSession = function() {
+            console.log("renewSession")
+            vm.choiceMade = true;
+
+            User.renewSession(vm.username)
+                .then(function(response) {
+                    if (response.data.success) {
+                        AuthToken.setToken(response.data.token);
+                        vm.checkSession();
+                    } else {
+                        vm.modalBody = response.data.message;
+                    }
+                });
+            hideModal();
+        };
+        vm.endSession = function() {
+            vm.choiceMade = true;
+            hideModal();
+            $timeout(function() {
+                showModal(2);
+            }, 1000)
+        };
+
+        function hideModal() {
+
+            $("#myModal").modal("hide");
 
         }
 
-        vm.checkSession();
 
         $rootScope.$on('$routeChangeStart', function() {
 
@@ -96,7 +205,7 @@
                             vm.successMsg = false;
                             vm.checkSession();
 
-                        }, 2000)
+                        }, 1000)
 
 
                         // redirect to home page
@@ -108,14 +217,15 @@
                 })
         };
 
-        this.logout = function() {
+        vm.logout = function() {
 
-            Auth.logout();
+            // Auth.logout();
 
-            $location.path('/logout');
-            $timeout(function() {
-                $location.path('/');
-            }, 1000);
+            // $location.path('/logout');
+            // $timeout(function() {
+            //     $location.path('/');
+            // }, 1000);
+            showModal(2);
         }
     }
 })();

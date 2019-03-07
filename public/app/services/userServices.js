@@ -21,9 +21,14 @@
             return $http.post('/api/users', _regData)
         }
 
+        // User.renewSession(username);
+        userFactory.renewSession = function(_username) {
+            var getRenew = $http.get('/api/renewToken/' + _username);;
+            console.log("getRenew:", getRenew);
+
+            return getRenew
+        }
+
         return userFactory;
     }
 })();
-
-// $http.post('/api/users', _regData)
-// .then(function(respose) {

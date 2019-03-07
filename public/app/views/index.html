@@ -95,7 +95,33 @@
             <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>
         </div> -->
 
-        <div ng-view style="padding-top:30px;">
+        <div ng-view style="padding-top:30px;"> </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" ng-click="main.endSession();" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">{{ main.modalHeader}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{main.modalBody}}</p>
+                        <div ng-show="main.hideButton" style="text-align: center;" class="loader">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" ng-hide="main.hideButton" ng-click="main.renewSession();" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                        <button type="button" ng-hide="main.hideButton" ng-click="main.endSession();" class="btn btn-danger" data-dismiss="modal">No</button>
+
+                    </div>
+                </div>
+
+            </div>
 
         </div>
 

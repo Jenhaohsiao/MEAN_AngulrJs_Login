@@ -149,8 +149,9 @@ module.exports = function(router) {
                             email: user.email
                         },
                         tokenSecret, {
-                            expiresIn: '5s'
+                            expiresIn: '30s'
                         });
+                    console.log("token:", token);
                     res.json({
                         success: true,
                         message: 'User authenticated!',
@@ -197,6 +198,45 @@ module.exports = function(router) {
     router.post('/me', function(req, res) {
 
         res.send(req.decoded);
+
+    })
+
+    router.get('/renewToken/:username', function(req, res) {
+
+        User.findOne({
+            username: req.params.username
+        }).select().exec(function(err, user) {
+
+            if (err) throw err;
+
+            if (!user) {
+                res.json({
+                    success: false,
+                    message: 'No user was found'
+                });
+            } else {
+
+                var newToken = jwt.sign({
+                        username: user.username,
+                        email: user.email
+                    },
+
+                    tokenSecret, {
+                        expiresIn: '1m'
+                    });
+
+                console.log("newToken:", newToken);
+
+                res.json({
+                    success: true,
+                    message: 'User authenticated!',
+                    token: newToken
+                });
+
+                return
+            }
+
+        });
 
     })
 
