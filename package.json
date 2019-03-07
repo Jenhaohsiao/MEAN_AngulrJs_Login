@@ -23,6 +23,8 @@
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.0",
     "mongoose": "^5.4.17",
+    "mongoose-title-case": "0.0.4",
+    "mongoose-validator": "^2.1.0",
     "morgan": "^1.9.1"
   }
 }

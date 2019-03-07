@@ -57,22 +57,27 @@
     ) {
         $rootScope.$on('$routeChangeStart', function(event, next, current) {
 
-
-            if (next.$$route.authenticated == true) {
-                console.log("Needs to be Aeuthenticated");
-                if (!Auth.isLoggedIn()) {
-                    event.preventDefault();
-                    $location.path('/');
+            if (next.$$route) {
+                if (next.$$route.authenticated == true) {
+                    console.log("Needs to be Aeuthenticated");
+                    if (!Auth.isLoggedIn()) {
+                        event.preventDefault();
+                        $location.path('/');
+                    }
+                } else if (next.$$route.authenticated == false) {
+                    if (Auth.isLoggedIn()) {
+                        event.preventDefault();
+                        $location.path('/profile');
+                    }
+                    console.log("NOT Needs to be Aeuthenticated");
+                } else {
+                    console.log("Aeuthenticated doesn't matter");
                 }
-            } else if (next.$$route.authenticated == false) {
-                if (Auth.isLoggedIn()) {
-                    event.preventDefault();
-                    $location.path('/profile');
-                }
-                console.log("NOT Needs to be Aeuthenticated");
             } else {
                 console.log("Aeuthenticated doesn't matter");
             }
+
+
         })
 
     });

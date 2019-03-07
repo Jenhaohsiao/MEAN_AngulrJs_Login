@@ -14,8 +14,9 @@ module.exports = function(router) {
         user.username = require.body.username;
         user.password = require.body.password;
         user.email = require.body.email;
+        user.name = require.body.name;
 
-        if (require.body.username == null || require.body.username == '' || require.body.password == null || require.body.password == '' || require.body.email == null || require.body.email == '') {
+        if (require.body.username == null || require.body.username == '' || require.body.password == null || require.body.password == '' || require.body.email == null || require.body.email == '' || require.body.name == null || require.body.name == '') {
             response.json({
                 success: false,
                 message: 'Ensure username, email, and password were provided'
@@ -25,10 +26,56 @@ module.exports = function(router) {
             user.save(function(err) {
                 if (err) {
 
-                    response.json({
-                        success: false,
-                        message: 'Username or email already exists!'
-                    });
+                    if (err.errors != null) {
+                        if (err.errors.name) {
+                            response.json({
+                                success: false,
+                                message: err.errors.name.message
+                            });
+                        } else if (err.errors.email) {
+                            response.json({
+                                success: false,
+                                message: err.errors.email.message
+                            });
+                        } else if (err.errors.username) {
+                            response.json({
+                                success: false,
+                                message: err.errors.username.message
+                            });
+                        } else if (err.errors.password) {
+                            response.json({
+                                success: false,
+                                message: err.errors.password.message
+                            });
+                        } else {
+                            response.json({
+                                success: false,
+                                message: err
+                            });
+                        }
+                    } else if (err) {
+                        if (err.code == 11000) {
+
+                            if (err.errmsg[61] == "u") {
+                                response.json({
+                                    success: false,
+                                    message: 'The Username already taken'
+                                });
+                            } else if (err.errmsg[61] == "e") {
+                                response.json({
+                                    success: false,
+                                    message: 'The email already taken'
+                                });
+                            }
+
+                        } else {
+                            response.json({
+                                success: false,
+                                message: err
+                            });
+                        }
+                    }
+
                 } else {
 
                     response.json({
