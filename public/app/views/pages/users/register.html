@@ -2,10 +2,17 @@
     <h1>Register Page</h1>
 </div>
 
-<form ng-submit="register.regUser(register.regData)">
-
-    <label>Name:</label>
-    <input class="form-control" type="text" name="name" placeholder="Please enter name" ng-model="register.regData.name">
+<form name="regForm" ng-submit="register.regUser(register.regData)" novalidate>
+    <!-- <div ng-class="{'has-success':(regForm.name.$valid && !regForm.name.$pristine),'has-error':(!regForm.name.$valid && !regForm.name.$pristine)"> -->
+    <div>
+        <label>Name:</label>
+        <input class="form-control " ng-minlengtht="5" ng-maxlength="25" ype="text" name="name" placeholder="Please enter name" ng-pattern="/^[a-zA-Z]+$/" ng-model="register.regData.name" required>
+        <p class="help-block" ng-show="(!regForm.name.$pristine && regForm.name.$error.required) || (regForm.$submitted &&regForm.name.$error.required) ">This field is required</p>
+    </div>
+    <ul class="help-block" ng-show="(!regForm.name.$pristine && regForm.name.$error.pattern)">
+        <li>Must have not use special characters</li>
+        <li>Must have not use letter and numbers only</li>
+    </ul>
     <br>
 
     <label>Email:</label>
@@ -19,6 +26,15 @@
     <br>
     <button class="btn btn-primary" type="submit">Register</button>
 </form>
+
+<div><b>The name have errors?</b>{{ regForm.name.$error.required}}</div>
+
+<div><b>The form pristine(new)?</b>{{ regForm.$pristine}}</div>
+<div><b>The form have errors?</b>{{ regForm.$error}}</div>
+<div><b>The form submitted? </b>{{ regForm.$submitted}}</div>
+<div><b>The form valid? </b>{{ regForm.$valid}}</div>
+
+
 <br>
 
 <div class="jumbotron text-center" ng-show="register.loading">

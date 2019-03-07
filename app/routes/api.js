@@ -149,7 +149,7 @@ module.exports = function(router) {
                             email: user.email
                         },
                         tokenSecret, {
-                            expiresIn: '2h'
+                            expiresIn: '5s'
                         });
                     res.json({
                         success: true,

@@ -17,19 +17,40 @@
         'Auth',
         '$timeout',
         '$location',
-        '$rootScope'
+        '$rootScope',
+        '$interval'
     ];
 
     function MainController(
         Auth,
         $timeout,
         $location,
-        $rootScope) {
+        $rootScope,
+        $interval) {
 
         var vm = this;
         vm.loadme = false;
 
+        vm.checkSession = function() {
+
+            if (Auth.isLoggedIn()) {
+
+                vm.isCheckingSession = true;
+                var interval = $interval(function() {
+                    console.log("After logged in, run $interval")
+
+                }, 2000)
+            }
+
+        }
+
+        vm.checkSession();
+
         $rootScope.$on('$routeChangeStart', function() {
+
+            if (!vm.isCheckingSession) {
+                vm.checkSession();
+            }
 
             if (Auth.isLoggedIn()) {
                 // console.log("Success: User is logged In.");
@@ -73,6 +94,8 @@
                             vm.loginData.username = null;
                             vm.loginData.password = null;
                             vm.successMsg = false;
+                            vm.checkSession();
+
                         }, 2000)
 
 
