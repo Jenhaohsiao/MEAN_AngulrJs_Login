@@ -23,11 +23,17 @@
 
         // User.renewSession(username);
         userFactory.renewSession = function(_username) {
-            var getRenew = $http.get('/api/renewToken/' + _username);;
-            console.log("getRenew:", getRenew);
-
-            return getRenew
+            return $http.get('/api/renewToken/' + _username);
         }
+
+        userFactory.getPermission = function() {
+            return $http.get('/api/permission/')
+        }
+
+        userFactory.getUsers = function() {
+            return $http.get('/api/management/')
+        }
+
 
         return userFactory;
     }

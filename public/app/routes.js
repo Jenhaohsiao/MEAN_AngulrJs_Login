@@ -62,27 +62,42 @@
         $rootScope,
         Auth,
         $location,
+        User,
     ) {
+
+        // Run a check on each route to see if user is togged in or not (depending on if it is specified in the individual route)
         $rootScope.$on('$routeChangeStart', function(event, next, current) {
 
+            // Check each time route changes
             if (next.$$route) {
+
+                // Only perform if user visited a route listed above
                 if (next.$$route.authenticated == true) {
-                    console.log("Needs to be Aeuthenticated");
+                    console.log("This page needs to be Aeuthenticated");
                     if (!Auth.isLoggedIn()) {
                         event.preventDefault();
                         $location.path('/');
+                    } else if (next.$$route.permission) {
+
+                        User.getPermission()
+                            .then(function(response) {
+                                console.log("getPermission:", response);
+                            });
+
                     }
+
+
                 } else if (next.$$route.authenticated == false) {
                     if (Auth.isLoggedIn()) {
                         event.preventDefault();
                         $location.path('/profile');
                     }
-                    console.log("NOT Needs to be Aeuthenticated");
+                    console.log("This page  NOT Needs to be Aeuthenticated");
                 } else {
-                    console.log("Aeuthenticated doesn't matter");
+                    console.log("This page  Aeuthenticated doesn't matter");
                 }
             } else {
-                console.log("Aeuthenticated doesn't matter");
+                console.log("This page  Aeuthenticated doesn't matter");
             }
 
 
