@@ -7,7 +7,8 @@
         'userServices',
         'ngAnimate',
         'mainController',
-        'authServices'
+        'authServices',
+        'managementController'
     ])
 
     .config(function($httpProvider) {

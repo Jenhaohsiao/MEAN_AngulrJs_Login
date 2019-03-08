@@ -35,8 +35,16 @@
         .when('/profile', {
             templateUrl: 'app/views/pages/users/profile.html',
             authenticated: true,
-
         })
+
+        .when('/management', {
+            templateUrl: 'app/views/pages/management/management.html',
+            controller: "ManagementController",
+            controllerAs: 'management',
+            authenticated: true,
+            permission: ['admin', 'moderator']
+        })
+
 
 
         .otherwise({

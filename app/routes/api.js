@@ -222,7 +222,7 @@ module.exports = function(router) {
                     },
 
                     tokenSecret, {
-                        expiresIn: '1m'
+                        expiresIn: '5m'
                     });
 
                 console.log("newToken:", newToken);

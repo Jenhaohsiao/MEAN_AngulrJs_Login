@@ -40,6 +40,9 @@
 
         var vm = this;
         vm.loadme = false;
+        var leftTime = 25;
+        var isTimerStop = false;
+
 
         vm.checkSession = function() {
 
@@ -47,40 +50,51 @@
 
                 vm.isCheckingSession = true;
                 var interval = $interval(function() {
-                    // console.log("loggin, run $interval")
-
-                    var token = $window.localStorage.getItem('token');
-
-                    if (token === null) {
-                        $interval.cancel(interval)
-                    } else {
-                        // Angulr taking a JSON web token and converting the token time
-                        // to timestamp time. So that we can compare it to local time or current time.
-                        function parseJwt(token) {
-                            var base64Url = token.split('.')[1];
-                            var base64 = base64Url.replace('-', '+').replace('_', '/');
-                            return JSON.parse($window.atob(base64));
+                        // console.log("loggin, run $interval")
+                        if (isTimerStop) {
+                            $interval.cancel(interval);
+                            isTimerStop = false;
                         }
 
-                        var expireTime = parseJwt(token);
-                        // Convert the date object in JavaScript to time stamp
-                        var timeStamp = Math.floor(Date.now() / 1000);
-                        // console.log("expireTime:", expireTime.exp)
-                        // console.log("timeStamp:", timeStamp)
-                        var timeCheck = expireTime.exp - timeStamp
-                        console.log("timeCheck:", timeCheck)
+                        var token = $window.localStorage.getItem('token');
 
-                        if (timeCheck <= 25) {
-                            showModal(1);
+                        if (token === null) {
                             $interval.cancel(interval)
-
                         } else {
-                            console.log('Token not yet expired')
+                            // Angulr taking a JSON web token and converting the token time
+                            // to timestamp time. So that we can compare it to local time or current time.
+                            function parseJwt(token) {
+                                var base64Url = token.split('.')[1];
+                                var base64 = base64Url.replace('-', '+').replace('_', '/');
+                                return JSON.parse($window.atob(base64));
+                            }
 
+                            var expireTime = parseJwt(token);
+                            // Convert the date object in JavaScript to time stamp
+                            var timeStamp = Math.floor(Date.now() / 1000);
+
+
+                            // console.log("expireTime:", expireTime.exp)
+                            // console.log("timeStamp:", timeStamp)
+                            var timeCheck = expireTime.exp - timeStamp
+                            console.log("timeCheck:", timeCheck)
+
+                            if (timeCheck <= 25 && timeCheck >= 0) {
+                                showModal(1);
+                                leftTime = leftTime - 1;
+
+                            } else if (timeCheck <= 0) {
+                                $interval.cancel(interval)
+                                showModal(2);
+
+                            } else {
+                                console.log('Token not yet expired')
+
+                            }
                         }
-                    }
 
-                }, 2000)
+                    },
+                    1000)
             }
         };
 
@@ -96,38 +110,45 @@
             if (_option === 1) {
 
                 vm.modalHeader = "Timeout Warning";
-                vm.modalBody = " Your session will expired in X seconds. Would you like to renew your session?";
+                vm.modalBody = " Your session will expired in " + leftTime + "seconds. Would you like to renew your session?";
 
+                // For bootstarp modal
                 $("#myModal").modal({
                     backdrop: "static"
                 });
+                // For bootstarp modal end
+
+
             } else if (_option === 2) {
                 vm.hideButton = true;
                 vm.modalHeader = 'Logging Out';
+
+                // For bootstarp modal
                 $("#myModal").modal({
                     backdrop: "static"
                 });
+                // For bootstarp modal end
 
                 $timeout(function() {
-
                     Auth.logout();
                     $location.path('/');
                     hideModal();
                     $route.reload();
-
                 }, 2000);
             }
 
+            // wait for renew
             $timeout(function() {
                 if (!vm.choiceMade) {
                     hideModal();
                 }
-            }, 5000)
+            }, 25000)
         }
 
         vm.renewSession = function() {
             console.log("renewSession")
             vm.choiceMade = true;
+            isTimerStop = true; // For stop the prevous one interval
 
             User.renewSession(vm.username)
                 .then(function(response) {
@@ -146,6 +167,8 @@
             $timeout(function() {
                 showModal(2);
             }, 1000)
+
+
         };
 
         function hideModal() {

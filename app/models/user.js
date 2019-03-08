@@ -81,9 +81,13 @@ var UserSchema = new Schema({
         required: true,
         unique: true,
         validate: emailValidator
+    },
 
+    permission: {
+        type: String,
+        required: true,
+        deault: 'user'
     }
-
 
 });
 
