@@ -30,19 +30,26 @@
             return $http.get('/api/permission/')
         }
 
+
+        // Get all the users from database
         userFactory.getUsers = function() {
-            return $http.get('/api/management/')
-        }
+            return $http.get('/api/management/');
+        };
 
+        // Get user to then edit
+        userFactory.getUser = function(id) {
+            return $http.get('/api/edit/' + id);
+        };
 
-        userFactory.getUser = function(_id) {
-            return $http.get('/api/edit/' + _id)
-        }
+        // Delete a user
+        userFactory.deleteUser = function(username) {
+            return $http.delete('/api/management/' + username);
+        };
 
-
-        userFactory.deleteUser = function(_username) {
-            return $http.delete('/api/management/' + _username)
-        }
+        // Edit a user
+        userFactory.editUser = function(id) {
+            return $http.put('/api/edit', id);
+        };
 
         return userFactory;
     }

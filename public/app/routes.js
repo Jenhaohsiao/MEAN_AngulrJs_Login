@@ -45,11 +45,12 @@
             permission: ['admin', 'moderator']
         })
 
+        // Route: Edit a User
         .when('/edit/:id', {
             templateUrl: 'app/views/pages/management/edit.html',
-            controller: "EditController",
+            controller: 'EditController',
             controllerAs: 'edit',
-            // authenticated: true,
+            authenticated: true,
             permission: ['admin', 'moderator']
         })
 
