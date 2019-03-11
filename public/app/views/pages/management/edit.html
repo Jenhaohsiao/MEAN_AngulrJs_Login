@@ -1,0 +1,57 @@
+<div class="page-header">
+
+    <h1>Edit User</h1>
+
+</div>
+
+<br>
+<ul class="nav nav-tabs">
+    <li ng-click="edit.namePhase()" ng-class="nameTab" role="presentation"><a href="#">Home</a></li>
+    <li ng-click="edit.usernamePhase()" ng-class="usernameTab" role="presentation"><a href="#">Username</a></li>
+    <li ng-click="edit.emailPhase()" ng-class="emailTab" role="presentation"><a href="#">E-mail</a></li>
+    <li ng-click="edit.permissionPhase()" ng-class="permissionsTab" role="presentation"><a href="#">Permission</a></li>
+
+</ul>
+
+
+<!-- Phase One: Name -->
+
+<form name="edit.nameForm" ng-submit="edit.updateName(edit.newName,edit.nameForm.name.$valid)" ng-show="edit.phase1" novalidate>
+    <div>
+        <label>Name:</label>
+        <input class="form-control " ng-minlengtht="5" ng-maxlength="25" ype="text" name="name" placeholder="Please enter name" ng-pattern="/^[a-zA-Z]+$/" ng-model="edit.newName" required>
+        <p class="help-block" ng-show="(!edit.nameForm.name.$pristine && edit.nameForm.name.$error.required) || (edit.nameForm.$submitted && edit.nameForm.name.$error.required) ">This field is required</p>
+    </div>
+    <ul class="help-block" ng-show="(!edit.nameForm.name.$pristine && edit.nameForm.name.$error.pattern)">
+        <li>Must have not use special characters</li>
+        <li>Must have not use letter and numbers only</li>
+    </ul>
+    <br>
+
+    <!-- <label>Email:</label>
+    <input class="form-control" type="text" name="email" placeholder="Please enter email" ng-model="edit.nameForm.email">
+    <br>
+    <label>Username:</label>
+    <input class="form-control" type="test" name="username" placeholder="Please enter username" ng-model="edit.nameForm.username">
+    <br>
+    <label>Password:</label>
+    <input class="form-control" type="password" name="password" placeholder="Please enter password" ng-model="edit.nameForm.password"> -->
+    <br>
+    <button class="btn btn-primary" type="submit">Update</button>
+</form>
+
+<br>
+<div class="row show-hide-message" ng-show="edit.successMsg">
+    <div div class="alert alert-success">
+        {{ edit.successMsg}}
+    </div>
+</div>
+
+<div class="row show-hide-message" ng-show="edit.errorMsg">
+    <div div class="alert alert-danger">
+        {{ edit.errorMsg}}
+    </div>
+</div>
+<!-- Phase One: Username -->
+<!-- Phase One: E-mail -->
+<!-- Phase One: Permission -->

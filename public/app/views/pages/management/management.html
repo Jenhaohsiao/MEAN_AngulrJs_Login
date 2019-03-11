@@ -59,12 +59,11 @@
 
 
             <td>
-                <a href="#">
+                <a href="/edit/{{person._id}}">
                     <button type="button" ng-show="management.editAccess" class="btn btn-primary">Edit</button>
                 </a>
-                <a href="#">
-                    <button ng-click="management.deleteUser(person.username)" type="button" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
-                </a>
+                <button ng-click="management.deleteUser(person.username)" type="button" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
+
             </td>
 
 

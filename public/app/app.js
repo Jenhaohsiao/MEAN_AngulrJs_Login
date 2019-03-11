@@ -8,7 +8,8 @@
         'ngAnimate',
         'mainController',
         'authServices',
-        'managementController'
+        'managementController',
+        'editController'
     ])
 
     .config(function($httpProvider) {

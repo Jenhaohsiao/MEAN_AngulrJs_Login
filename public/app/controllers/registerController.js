@@ -30,13 +30,21 @@
         var vm = this;
         vm.loading = false;
 
+        function registerInit() {
 
+            vm.regData = {
+                permission: 'user' // temporary
+            }
+
+        }
+        registerInit();
 
         this.regUser = function(_regData) {
 
             vm.loading = true;
             vm.successMsg = null;
             vm.errorMsg = null;
+
             User.create(_regData)
                 .then(function(respose) {
                     console.log("After save, data:", respose);

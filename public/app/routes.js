@@ -45,6 +45,15 @@
             permission: ['admin', 'moderator']
         })
 
+        .when('/edit/:id', {
+            templateUrl: 'app/views/pages/management/edit.html',
+            controller: "EditController",
+            controllerAs: 'edit',
+            // authenticated: true,
+            permission: ['admin', 'moderator']
+        })
+
+
 
 
         .otherwise({

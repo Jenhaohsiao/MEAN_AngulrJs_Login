@@ -85,8 +85,8 @@ var UserSchema = new Schema({
 
     permission: {
         type: String,
-        // required: true,
-        deault: 'user'
+        deault: 'user',
+        required: true,
     }
 
 });

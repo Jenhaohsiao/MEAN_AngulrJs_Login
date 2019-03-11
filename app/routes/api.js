@@ -15,6 +15,7 @@ module.exports = function(router) {
         user.password = require.body.password;
         user.email = require.body.email;
         user.name = require.body.name;
+        user.permission = require.body.permission;
 
         if (require.body.username == null || require.body.username == '' || require.body.password == null || require.body.password == '' || require.body.email == null || require.body.email == '' || require.body.name == null || require.body.name == '') {
             response.json({
@@ -344,6 +345,53 @@ module.exports = function(router) {
 
     })
 
+
+    router.get('/edit/:id', function(req, res) {
+
+        var editUser = req.params.id;
+        User.findOne({
+            username: req.decoded.username
+        }, function(err, mainUser) {
+
+            if (err) throw err;
+
+            if (!mainUser) {
+                res.json({
+                    success: false,
+                    message: 'No user found'
+                });
+            } else {
+                if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+
+                    User.findOne({
+                        _id: editUser
+                    }, function(err, user) {
+                        if (err) throw err;
+                        if (!user) {
+                            res.json({
+                                success: false,
+                                message: 'No user found'
+                            });
+                        } else {
+                            res.json({
+                                success: true,
+                                user: user
+                            });
+                        }
+                    })
+
+
+                } else {
+                    res.json({
+                        success: false,
+                        message: 'Insufficient Permission'
+                    });
+                }
+            }
+
+        })
+
+    })
 
     return router;
 }
