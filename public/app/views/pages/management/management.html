@@ -13,6 +13,35 @@
 
 <br>
 
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6">
+        <div class="input-group">
+            <span class="input-group-addon">
+                Results to display:
+            </span>
+            <input type="text" class="form-control" ng-model="management.number">
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <button ng-click="management.showMore(management.number);" type="button" class="btn btn-success">Apply Filter</button>
+        <button ng-click="management.showAll() " type="button" class="btn btn-warning">Show All</button>
+    </div>
+</div>
+</div>
+
+<br>
+
+
+<div class="row show-hide-message" ng-show="management.ShowMoreError">
+    <div div class="alert alert-danger">
+        {{ management.ShowMoreError}}
+    </div>
+</div>
+
+<br>
+
+
 <div class="panel panel-primary">
     <div class="panel-heading">
         <strong>User Management</strong>
@@ -34,7 +63,7 @@
                     <button type="button" ng-show="management.editAccess" class="btn btn-primary">Edit</button>
                 </a>
                 <a href="#">
-                    <button type="button" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
+                    <button ng-click="management.deleteUser(person.username)" type="button" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
                 </a>
             </td>
 
@@ -44,14 +73,10 @@
 </div>
 </div>
 
+
+
 <div class="row show-hide-message" ng-show="management.successMsg">
     <div div class="alert alert-success">
         {{ management.successMsg}}
-    </div>
-</div>
-
-<div class="row show-hide-message" ng-show="management.errorMsg">
-    <div div class="alert alert-danger">
-        {{ management.errorMsg}}
     </div>
 </div>

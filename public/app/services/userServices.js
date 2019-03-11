@@ -34,6 +34,11 @@
             return $http.get('/api/management/')
         }
 
+        userFactory.deleteUser = function(_username) {
+            return $http.delete('/api/management/' + _username)
+        }
+
+
 
         return userFactory;
     }

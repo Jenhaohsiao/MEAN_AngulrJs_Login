@@ -149,7 +149,7 @@ module.exports = function(router) {
                             email: user.email
                         },
                         tokenSecret, {
-                            expiresIn: '30s'
+                            expiresIn: '300s'
                         });
                     console.log("token:", token);
                     res.json({
@@ -222,7 +222,7 @@ module.exports = function(router) {
                     },
 
                     tokenSecret, {
-                        expiresIn: '5m'
+                        expiresIn: '500m'
                     });
 
                 console.log("newToken:", newToken);
@@ -306,6 +306,42 @@ module.exports = function(router) {
             })
 
         });
+    })
+
+    router.delete('/management/:username', function(req, res) {
+
+        var deletedUser = req.params.username;
+        User.findOne({
+            username: req.decoded.username
+        }, function(err, mainUser) {
+
+            if (err) throw err;
+
+            if (!mainUser) {
+                res.json({
+                    success: false,
+                    message: "No user found ",
+                });
+            } else {
+                if (mainUser.permission !== "admin") {
+                    res.json({
+                        success: false,
+                        message: "Insufficient Permissions ",
+                    });
+                } else {
+                    User.findOneAndRemove({
+                        username: deletedUser
+                    }, function(err, user) {
+                        if (err) throw err;
+                        res.json({
+                            success: true
+                        });
+                    });
+                }
+            }
+
+        })
+
     })
 
 

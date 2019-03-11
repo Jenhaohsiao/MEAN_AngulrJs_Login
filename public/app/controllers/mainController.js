@@ -77,7 +77,7 @@
                             // console.log("expireTime:", expireTime.exp)
                             // console.log("timeStamp:", timeStamp)
                             var timeCheck = expireTime.exp - timeStamp
-                                // console.log("timeCheck:", timeCheck)
+                            console.log("timeCheck:", timeCheck)
 
                             if (timeCheck <= 25 && timeCheck >= 0) {
                                 showModal(1);
@@ -88,7 +88,7 @@
                                 showModal(2);
 
                             } else {
-                                // console.log('Token not yet expired')
+                                console.log('Token not yet expired')
 
                             }
                         }
