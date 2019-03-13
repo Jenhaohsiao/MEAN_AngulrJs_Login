@@ -16,15 +16,15 @@
 
     registerController.$inject = [
         '$http',
-        '$location',
         '$timeout',
+        '$state',
         'User'
     ];
 
     function registerController(
         $http,
-        $location,
         $timeout,
+        $state,
         User) {
 
         var vm = this;
@@ -55,7 +55,9 @@
                         vm.loading = false;
 
                         $timeout(function() {
-                            $location.path('/home');
+
+                            $state.go('home');
+
                         }, 2000)
 
 

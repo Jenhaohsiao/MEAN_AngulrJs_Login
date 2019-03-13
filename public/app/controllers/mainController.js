@@ -17,11 +17,10 @@
     MainController.$inject = [
         'Auth',
         '$timeout',
-        '$location',
         '$rootScope',
         '$interval',
         '$window',
-        '$route',
+        '$state',
         'User',
         'AuthToken',
     ];
@@ -29,11 +28,10 @@
     function MainController(
         Auth,
         $timeout,
-        $location,
         $rootScope,
         $interval,
         $window,
-        $route,
+        $state,
         User,
         AuthToken,
     ) {
@@ -77,6 +75,8 @@
                             // console.log("expireTime:", expireTime.exp)
                             // console.log("timeStamp:", timeStamp)
                             var timeCheck = expireTime.exp - timeStamp
+
+                            // How long will expired?
                             console.log("timeCheck:", timeCheck)
 
                             if (timeCheck <= 25 && timeCheck >= 0) {
@@ -88,7 +88,7 @@
                                 showModal(2);
 
                             } else {
-                                console.log('Token not yet expired')
+                                // console.log('Token not yet expired')
 
                             }
                         }
@@ -131,9 +131,10 @@
 
                 $timeout(function() {
                     Auth.logout();
-                    $location.path('/');
+                    // $state.go('home'); // ui-route
+
                     hideModal();
-                    $route.reload();
+                    $state.reload('home'); // ui-route
                 }, 2000);
             }
 
@@ -172,13 +173,14 @@
         };
 
         function hideModal() {
-
             $("#myModal").modal("hide");
-
         }
 
 
-        $rootScope.$on('$routeChangeStart', function() {
+        // $rootScope.$on('$routeChangeStart', function() {
+        $rootScope.$on('$stateChangeStart', function() {
+            console.log("$stateChangeStart in mainController");
+
 
             if (!vm.isCheckingSession) {
                 vm.checkSession();
@@ -228,7 +230,7 @@
 
                         $timeout(function() {
 
-                            $location.path('/about');
+                            $state.go('about'); // ui-router
                             vm.loginData.username = null;
                             vm.loginData.password = null;
                             vm.successMsg = false;
@@ -248,12 +250,6 @@
 
         vm.logout = function() {
 
-            // Auth.logout();
-
-            // $location.path('/logout');
-            // $timeout(function() {
-            //     $location.path('/');
-            // }, 1000);
             showModal(2);
         }
     }

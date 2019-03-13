@@ -2,42 +2,56 @@
     'use strict';
 
     angular.module('appRoutes', [
-        'ngRoute'
+        'ngRoute',
+        'ui.router',
+        'ui.router.state.events',
     ])
 
-    .config(function($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/', {
+    .config(function($routeProvider, $locationProvider, $stateProvider, $urlRouterProvider) {
+
+        // Ui-Router 
+        $urlRouterProvider.otherwise('/');
+        $stateProvider
+            .state("home", {
+                url: "/",
                 templateUrl: 'app/views/pages/home.html'
             })
 
-        .when('/about', {
-            templateUrl: 'app/views/pages/about.html'
+        .state("about", {
+            url: "/about",
+            templateUrl: 'app/views/pages/about.html',
+
+
         })
 
-        .when('/register', {
+        .state("register", {
+            url: "/register",
             templateUrl: 'app/views/pages/users/register.html',
             controller: "registerController",
             controllerAs: 'register',
             authenticated: false,
         })
 
-        .when('/login', {
+        .state("login", {
+            url: "/login",
             templateUrl: 'app/views/pages/users/login.html',
             authenticated: false,
         })
 
-        .when('/logout', {
+        .state("logout", {
+            url: "/logout",
             templateUrl: 'app/views/pages/users/logout.html',
             authenticated: true,
         })
 
-        .when('/profile', {
+        .state("profile", {
+            url: "/profile",
             templateUrl: 'app/views/pages/users/profile.html',
             authenticated: true,
         })
 
-        .when('/management', {
+        .state("management", {
+            url: "/management",
             templateUrl: 'app/views/pages/management/management.html',
             controller: "ManagementController",
             controllerAs: 'management',
@@ -45,21 +59,16 @@
             permission: ['admin', 'moderator']
         })
 
-        // Route: Edit a User
-        .when('/edit/:id', {
+        .state("edit", {
+            url: "/edit/:id",
             templateUrl: 'app/views/pages/management/edit.html',
             controller: 'EditController',
             controllerAs: 'edit',
             authenticated: true,
+
             permission: ['admin', 'moderator']
         })
 
-
-
-
-        .otherwise({
-            redirectTo: '/'
-        });
 
         $locationProvider.html5Mode({
             enabled: true,
@@ -71,23 +80,30 @@
     .run(function(
         $rootScope,
         Auth,
-        $location,
         User,
+        $state,
+        $trace,
     ) {
 
+
+        // $trace.enable('TRANSITION');
+
         // Run a check on each route to see if user is togged in or not (depending on if it is specified in the individual route)
-        $rootScope.$on('$routeChangeStart', function(event, next, current) {
+        // $rootScope.$on('$routeChangeStart', function(event, next, current) {
+        $rootScope.$on('$stateChangeStart', function(event, transition) {
+
+            console.log("transition:", transition);
 
             // Check each time route changes
-            if (next.$$route) {
+            if (transition.authenticated) {
 
                 // Only perform if user visited a route listed above
-                if (next.$$route.authenticated == true) {
+                if (transition.authenticated == true) {
                     console.log("This page needs to be Aeuthenticated");
                     if (!Auth.isLoggedIn()) {
                         event.preventDefault();
-                        $location.path('/');
-                    } else if (next.$$route.permission) {
+                        $state.go('/');
+                    } else if (transition.permission) {
 
                         User.getPermission()
                             .then(function(response) {
@@ -97,10 +113,11 @@
                     }
 
 
-                } else if (next.$$route.authenticated == false) {
+                } else if (transition.authenticated == false) {
                     if (Auth.isLoggedIn()) {
                         event.preventDefault();
-                        $location.path('/profile');
+                        $state.go('/profile');
+
                     }
                     console.log("This page  NOT Needs to be Aeuthenticated");
                 } else {

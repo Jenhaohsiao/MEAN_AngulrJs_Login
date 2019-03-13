@@ -17,6 +17,7 @@
     EditController.$inject = [
         '$scope',
         '$routeParams',
+        '$stateParams',
         'User',
         '$timeout',
     ];
@@ -24,6 +25,7 @@
     function EditController(
         $scope,
         $routeParams,
+        $stateParams,
         User,
         $timeout,
     ) {
@@ -32,20 +34,31 @@
         $scope.nameTab = 'active';
         vm.phase1 = true;
 
-        User.getUser($routeParams.id).then(function(response) {
+        // console.log("$routeParams.id:", $routeParams.id)
 
-            if (response.data.success) {
+        console.log("$stateParams.id:", $stateParams.id)
 
-                vm.newName = response.data.user.name; // Display user's name in scope
-                vm.newEmail = response.data.user.email; // Display user's e-mail in scope
-                vm.newUsername = response.data.user.username; // Display user's username in scope
-                vm.newPermission = response.data.user.permission; // Display user's permission in scope
-                vm.currentUser = response.data.user._id; // Get user's
+        // User.getUser($routeParams.id).then(function(response) {
 
-            } else {
-                vm.errorMsg = response.data.message;
-            }
-        })
+        if ($stateParams.id) {
+            console.log("Inside the function, $stateParams.id:", $stateParams.id)
+            User.getUser($stateParams.id).then(function(response) {
+
+                if (response.data.success) {
+
+                    vm.newName = response.data.user.name; // Display user's name in scope
+                    vm.newEmail = response.data.user.email; // Display user's e-mail in scope
+                    vm.newUsername = response.data.user.username; // Display user's username in scope
+                    vm.newPermission = response.data.user.permission; // Display user's permission in scope
+                    vm.currentUser = response.data.user._id; // Get user's
+
+                } else {
+                    vm.errorMsg = response.data.message;
+                }
+            })
+        } else {
+            console.log("There is no $stateParams.id")
+        }
 
 
         vm.namePhase = function() {

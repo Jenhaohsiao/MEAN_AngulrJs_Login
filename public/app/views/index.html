@@ -2,7 +2,7 @@
 <html lang="en" ng-app="userApp">
 
 <head>
-    <base href="/">
+    <base href="/" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,6 +23,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.7.7/angular-animate.min.js"></script>
     <script src="https://code.angularjs.org/1.7.7/angular-route.min.js"></script>
+    <script src="//unpkg.com/@uirouter/angularjs@1.0.7/release/angular-ui-router.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.22/stateEvents.js"></script>
+
+
     <!-- AngularJs end-->
 
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
@@ -84,7 +88,16 @@
             <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>
         </div> -->
 
-        <div ng-view style="padding-top:30px;"> </div>
+        <div style="padding-top:60px;">
+            <h3 style="color:aqua;">Ui-Router</h3>
+            <ui-view></ui-view>
+        </div>
+
+        <!-- <div style="padding-top:30px;">
+            <h3 style="color:rgb(193, 158, 45);">ng-Route</h3>
+            <ng-view></ng-view>
+        </div> -->
+
 
 
         <!-- Modal -->
